@@ -1,36 +1,40 @@
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { signInAPI } from "../actions";
+import { Navigate } from "react-router-dom";
 
 const Login = (props) => {
-    return (
-        <Container>
-        <Nav>
-          <a href="/">
-            <img src="/images/login-logo.svg" alt="" />
-          </a>
-          <div>
-            <Join>Join now</Join>
-            <SignIn>Sign in</SignIn>
-          </div>
-        </Nav>
-        <Section>
-          <Hero>
-            <h1>Welcome to your professional community</h1>
-            <img src="/images/login-hero.svg" alt="" />
-          </Hero>
-          <Form>
-            <Google>
-              <img src="/images/google.svg" alt=" " />
-              Sign in with Google
-            </Google>
-          </Form>
-        </Section>
-      </Container>
-    );
-}
+  return (
+    <Container>
+      {props.user && <Navigate to="/home" />}
+      <Nav>
+        <a href="/">
+          <img src="/images/login-logo.svg" alt="" />
+        </a>
+        <div>
+          <Join>Sign Up</Join>
+          <SignIn>Sign in</SignIn>
+        </div>
+      </Nav>
+      <Section>
+        <Hero>
+          <h1>Welcome to ProNet - Build your professional Network</h1>
+          <img src="/images/login-hero.svg" alt="" />
+        </Hero>
+        <Form>
+          <Google onClick={() => props.signIn()}>
+            <img src="/images/google.svg" alt=" " />
+            Sign in with Google
+          </Google>
+        </Form>
+      </Section>
+    </Container>
+  );
+};
 
 // Giving styling to container and navbar
 const Container = styled.div`
-padding: 0px;
+  padding: 0px;
 `;
 
 const Nav = styled.nav`
@@ -40,43 +44,45 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   position: relative;
-//   to give space between linkedin, join now, sign in 
+  //to give space between linkedin, join now, sign in
   justify-content: space-between;
-//   sign in , join now is not in new line 
+  //sign in , join now is not in new line
   flex-wrap: nowrap;
 
   & > a {
     width: 135px;
     height: 34px;
     @media (maxwidth: 768px) {
-    padding: 0 5px;
+      padding: 0 5px;
     }
   }
 `;
 
 const Join = styled.a`
-  font-size: 16px;
-  padding: 12px 18px;
-  text-decoration: none;
-  border-radius: 24px;
-  font-weight: 600;
   color: rgba(0, 0, 0, 0.6);
+  border-radius: 24px;
+  transition-duration: 167ms;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 40px;
+  padding: 12px 18px;
   margin-right: 12px;
+  text-align: center;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.08);
-    color: rgba(0, 0, 0, 0.8);
-    text-decoration: none;
-  }
+      background-color: rgba(0, 0, 0, 0.08);
+      color: rgba(0, 0, 0, 0.8);
+      text-decoration: none;
+    }
   @media (max-width: 768px) {
     margin: auto;
-    margin-right: 4px;
+    margin-rightL 4px;
     padding: 6px 9px;
   }
 `;
 
 const SignIn = styled.a`
-  box-shadow: inset 0 0 0 1px #0a66c2;
-  color: #0a66c2;
+  box-shadow: inset 0 0 0 1px #f31e49;
+  color: #f31e49;
   border-radius: 24px;
   transition-duration: 167ms;
   font-size: 16px;
@@ -86,8 +92,8 @@ const SignIn = styled.a`
   text-align: center;
   background-color: rgba(0, 0, 0, 0);
   &:hover {
-    background-color: rgba(112, 181, 249, 0.1);
-    color: #0a66c2;
+    background-color: #fee7eb;
+    color: #f31e49;
     text-decoration: none;
   }
   @media (max-width: 768px) {
@@ -97,24 +103,24 @@ const SignIn = styled.a`
 `;
 
 const Section = styled.section`
-display: flex;
-align-content: start;
-min-height: 700px;
-padding-bottom: 138px;
-padding-top: 40px;
-padding: 60px 0;
-position: relative;
-// help to make it responsive
-flex-wrap: wrap;
-width: 100%;
-max-width: 1128px;
-align-items: center;
-margin: auto;
-
-@media (max-width: 768px) {
+  display: flex;
+  align-content: start;
+  min-height: 700px;
+  padding-bottom: 138px;
+  padding-top: 40px;
+  padding: 60px 0;
+  position: relative;
+  // help to make it responsive
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1128px;
+  align-items: center;
   margin: auto;
-  min-height: 0px;
-}
+
+  @media (max-width: 768px) {
+    margin: auto;
+    min-height: 0px;
+  }
 `;
 
 const Hero = styled.div`
@@ -125,6 +131,7 @@ const Hero = styled.div`
     font-size: 56px;
     color: #2977c9;
     color: #8f5849;
+    color: rgba(0, 0, 0, 0.7);
     font-weight: 200;
     line-height: 70px;
     // display: inline;
@@ -160,7 +167,7 @@ const Form = styled.div`
   width: 408px;
 
   @media (max-width: 768px) {
-  margin-top: 20px;
+    margin-top: 20px;
   }
 `;
 
@@ -185,4 +192,14 @@ const Google = styled.button`
   }
 `;
 
-export default Login;
+const mapStatetoProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+
+const mapDispatchtoProps = (dispatch) => ({
+  signIn: () => dispatch(signInAPI()),
+});
+
+export default connect(mapStatetoProps, mapDispatchtoProps)(Login);
